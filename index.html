@@ -1,0 +1,1496 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>אימון המוח הימני וסינכרון ההמיספרות</title>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700&family=Rubik:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --pink-light: #FFE8F0;
+            --pink-medium: #FFB6C8;
+            --pink-dark: #E8A0B0;
+            --cream: #FFF8F0;
+            --cream-dark: #F5EDE5;
+            --gold: #D4A574;
+            --gold-light: #E8C9A8;
+            --gold-dark: #B8956A;
+            --purple-soft: #DCD0FF;
+            --blue-soft: #C8E0FF;
+            --text-dark: #4A3F55;
+            --text-light: #7A6B85;
+            --white: #FFFFFF;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Heebo', sans-serif;
+            background: var(--pink-light);
+            min-height: 100vh;
+            color: var(--text-dark);
+        }
+
+        .header {
+            background: var(--pink-medium);
+            padding: 25px 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-family: 'Rubik', sans-serif;
+            font-size: 1.8rem;
+            color: var(--white);
+        }
+
+        .header p {
+            font-size: 0.95rem;
+            color: var(--white);
+            margin-top: 8px;
+        }
+
+        .brain-container {
+            display: flex;
+            justify-content: center;
+            padding: 30px 20px;
+        }
+
+        .brain-visual {
+            position: relative;
+            width: 280px;
+            height: 200px;
+        }
+
+        .hemisphere {
+            position: absolute;
+            width: 130px;
+            height: 160px;
+            border-radius: 50% 50% 45% 45%;
+            top: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .hemisphere:hover { transform: scale(1.05); }
+        .left-brain { left: 10px; background: var(--blue-soft); }
+        .right-brain { right: 10px; background: var(--purple-soft); }
+
+        .hemisphere-label { font-size: 0.85rem; font-weight: 600; color: var(--text-dark); }
+        .hemisphere-traits { font-size: 0.7rem; color: var(--text-light); text-align: center; line-height: 1.4; }
+
+        .synapse-container {
+            position: absolute;
+            left: 50%; top: 50%;
+            transform: translate(-50%, -50%);
+            width: 40px; height: 100px;
+        }
+
+        .synapse {
+            position: absolute;
+            width: 4px; height: 4px;
+            background: var(--gold);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        .synapse:nth-child(1) { top: 10%; left: 50%; animation-delay: 0s; }
+        .synapse:nth-child(2) { top: 30%; left: 30%; animation-delay: 0.3s; }
+        .synapse:nth-child(3) { top: 50%; left: 50%; animation-delay: 0.6s; }
+        .synapse:nth-child(4) { top: 70%; left: 70%; animation-delay: 0.9s; }
+        .synapse:nth-child(5) { top: 90%; left: 50%; animation-delay: 1.2s; }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(2.5); opacity: 1; }
+        }
+
+        .sync-status {
+            text-align: center;
+            padding: 15px;
+            background: var(--white);
+            margin: 0 20px 20px;
+            border-radius: 15px;
+        }
+
+        .sync-meter { height: 12px; background: var(--cream-dark); border-radius: 10px; margin: 10px 0; }
+        .sync-fill { height: 100%; background: var(--gold); border-radius: 10px; transition: width 0.5s; }
+        .sync-text { font-size: 0.85rem; color: var(--text-light); }
+
+        .reset-btn {
+            margin-top: 10px;
+            padding: 8px 20px;
+            border: 2px solid var(--pink-medium);
+            border-radius: 20px;
+            background: var(--white);
+            color: var(--text-dark);
+            font-family: 'Heebo', sans-serif;
+            cursor: pointer;
+        }
+
+        .reset-btn:hover { background: var(--pink-light); }
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            padding: 0 20px 20px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 25px;
+            font-family: 'Heebo', sans-serif;
+            font-size: 0.9rem;
+            cursor: pointer;
+            background: var(--white);
+            color: var(--text-dark);
+        }
+
+        .tab-btn.active { background: var(--gold); color: var(--white); }
+
+        .main-content { padding: 0 20px 100px; }
+        .section { display: none; }
+        .section.active { display: block; }
+
+        .exercise-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+
+        .exercise-card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 25px;
+            position: relative;
+        }
+
+        .exercise-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 5px; background: var(--gold); border-radius: 20px 20px 0 0; }
+
+        .exercise-icon {
+            width: 60px; height: 60px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+        }
+
+        .icon-creative { background: var(--purple-soft); }
+        .icon-visual { background: var(--pink-light); }
+        .icon-sync { background: var(--gold-light); }
+        .icon-movement { background: var(--blue-soft); }
+
+        .exercise-card h3 { font-family: 'Rubik', sans-serif; font-size: 1.1rem; margin-bottom: 10px; }
+        .exercise-card p { font-size: 0.85rem; color: var(--text-light); line-height: 1.6; margin-bottom: 15px; }
+
+        .start-btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 12px;
+            background: var(--gold);
+            color: var(--white);
+            font-family: 'Heebo', sans-serif;
+            font-size: 0.95rem;
+            cursor: pointer;
+        }
+
+        .exercise-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(74, 63, 85, 0.9);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .exercise-modal.active { display: flex; }
+
+        .modal-content {
+            background: var(--white);
+            border-radius: 25px;
+            padding: 30px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px; left: 15px;
+            width: 35px; height: 35px;
+            border: none;
+            border-radius: 50%;
+            background: var(--cream);
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        .modal-title { font-family: 'Rubik', sans-serif; font-size: 1.4rem; margin-bottom: 20px; text-align: center; }
+        .exercise-area { min-height: 250px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+
+        .canvas-container { background: var(--cream); border-radius: 15px; padding: 10px; margin-bottom: 15px; }
+        #drawingCanvas { border-radius: 10px; background: var(--white); cursor: crosshair; touch-action: none; }
+        .canvas-tools { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 10px; }
+
+        .tool-btn {
+            padding: 8px 15px;
+            border: 2px solid var(--pink-medium);
+            border-radius: 20px;
+            background: var(--white);
+            font-family: 'Heebo', sans-serif;
+            cursor: pointer;
+        }
+
+        .tool-btn:hover { background: var(--pink-medium); color: var(--white); }
+
+        .timer-display { font-family: 'Rubik', sans-serif; font-size: 3rem; color: var(--gold-dark); margin: 20px 0; }
+        .timer-label { font-size: 0.9rem; color: var(--text-light); margin-bottom: 10px; }
+        .timer-controls { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; }
+
+        .timer-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            font-family: 'Heebo', sans-serif;
+            cursor: pointer;
+        }
+
+        .timer-btn.primary { background: var(--gold); color: var(--white); }
+        .timer-btn.secondary { background: var(--cream); color: var(--text-dark); }
+        .timer-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .current-word { font-family: 'Rubik', sans-serif; font-size: 2.5rem; color: var(--gold-dark); margin: 20px 0; padding: 20px; background: var(--cream); border-radius: 15px; }
+
+        .association-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid var(--pink-light);
+            border-radius: 12px;
+            font-family: 'Heebo', sans-serif;
+            font-size: 1rem;
+            text-align: center;
+        }
+
+        .association-input:focus { outline: none; border-color: var(--gold); }
+        .association-input:disabled { background: var(--cream-dark); }
+
+        .associations-list { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 15px; }
+        .association-tag { padding: 8px 15px; background: var(--purple-soft); border-radius: 20px; font-size: 0.85rem; }
+
+        .breathing-circle {
+            width: 200px; height: 200px;
+            border-radius: 50%;
+            background: var(--blue-soft);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px auto;
+            transform: scale(1);
+        }
+
+        .breathing-circle.inhale {
+            animation: breatheIn 6s ease forwards;
+        }
+        
+        .breathing-circle.exhale {
+            animation: breatheOut 6s ease forwards;
+        }
+        
+        .breathing-circle.hold {
+            /* No animation - stays still */
+        }
+
+        @keyframes breatheIn {
+            from { transform: scale(1); background: var(--blue-soft); }
+            to { transform: scale(1.3); background: var(--purple-soft); }
+        }
+        
+        @keyframes breatheOut {
+            from { transform: scale(1.3); background: var(--purple-soft); }
+            to { transform: scale(0.8); background: var(--gold-light); }
+        }
+
+        .breathing-text { font-family: 'Rubik', sans-serif; font-size: 1.3rem; color: var(--text-dark); text-align: center; }
+
+        .nostril-indicator { display: flex; gap: 40px; justify-content: center; margin-top: 20px; }
+
+        .nostril {
+            width: 70px; height: 70px;
+            border-radius: 50%;
+            background: var(--cream);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-direction: column;
+            transition: all 0.3s;
+        }
+
+        .nostril.active { background: var(--gold); transform: scale(1.1); }
+        .nostril-label { font-size: 0.7rem; margin-top: 3px; color: var(--text-light); }
+
+        .movement-visual { display: flex; justify-content: center; gap: 50px; margin: 20px 0; }
+
+        .body-part {
+            width: 80px; height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+
+        .left-part { background: var(--blue-soft); }
+        .right-part { background: var(--purple-soft); }
+
+        .movement-instruction { font-size: 1.2rem; color: var(--text-dark); margin-bottom: 20px; text-align: center; }
+
+        .figure-display { display: flex; gap: 40px; justify-content: center; margin: 20px 0; }
+
+        .figure-box {
+            width: 120px; height: 120px;
+            background: var(--cream);
+            border-radius: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .figure-label { position: absolute; bottom: -25px; left: 0; right: 0; text-align: center; font-size: 0.8rem; color: var(--text-light); }
+
+        .dot-animate {
+            width: 15px; height: 15px;
+            background: var(--gold);
+            border-radius: 50%;
+            position: absolute;
+        }
+
+        .dot-8 { animation: move8 3s infinite ease-in-out; }
+        .dot-0 { animation: move0 3s infinite ease-in-out; background: var(--purple-soft); border: 3px solid var(--gold-dark); }
+
+        @keyframes move8 {
+            0%, 100% { top: 50%; left: 50%; transform: translate(-50%, -50%); }
+            12.5% { top: 20%; left: 70%; }
+            25% { top: 50%; left: 50%; transform: translate(-50%, -50%); }
+            37.5% { top: 80%; left: 70%; }
+            50% { top: 50%; left: 50%; transform: translate(-50%, -50%); }
+            62.5% { top: 20%; left: 30%; }
+            75% { top: 50%; left: 50%; transform: translate(-50%, -50%); }
+            87.5% { top: 80%; left: 30%; }
+        }
+
+        @keyframes move0 {
+            0%, 100% { top: 10%; left: 50%; transform: translate(-50%, 0); }
+            25% { top: 50%; left: 90%; transform: translate(-50%, -50%); }
+            50% { top: 90%; left: 50%; transform: translate(-50%, -100%); }
+            75% { top: 50%; left: 10%; transform: translate(-50%, -50%); }
+        }
+
+        .score-display { background: var(--gold); color: var(--white); padding: 10px 20px; border-radius: 20px; font-weight: 600; margin-bottom: 15px; }
+
+        .listening-notes {
+            width: 100%;
+            min-height: 100px;
+            padding: 15px;
+            border: 2px solid var(--pink-medium);
+            border-radius: 12px;
+            font-family: 'Heebo', sans-serif;
+            resize: vertical;
+            margin-top: 15px;
+        }
+
+        .progress-stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
+        .stat-card { background: var(--white); border-radius: 15px; padding: 20px; text-align: center; }
+        .stat-value { font-family: 'Rubik', sans-serif; font-size: 2rem; color: var(--gold-dark); }
+        .stat-label { font-size: 0.85rem; color: var(--text-light); margin-top: 5px; }
+
+        .daily-streak { background: var(--gold); border-radius: 20px; padding: 25px; text-align: center; margin-bottom: 20px; color: var(--white); }
+        .streak-number { font-family: 'Rubik', sans-serif; font-size: 3rem; }
+
+        .tips-list { display: flex; flex-direction: column; gap: 15px; }
+        .tip-card { background: var(--white); border-radius: 15px; padding: 20px; display: flex; gap: 15px; }
+        .tip-icon { width: 45px; height: 45px; border-radius: 12px; background: var(--gold-light); display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0; }
+        .tip-content h4 { font-size: 1rem; margin-bottom: 5px; }
+        .tip-content p { font-size: 0.85rem; color: var(--text-light); }
+
+        .eye-tracking-area { position: relative; width: 100%; height: 200px; background: var(--cream); border-radius: 15px; }
+        .tracking-ball { position: absolute; width: 30px; height: 30px; border-radius: 50%; background: var(--gold); transition: all 1.5s ease-in-out; }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>🧠 אימון המוח הימני</h1>
+        <p>שחרר את היצירתיות וסנכרן את ההמיספרות</p>
+    </header>
+
+    <div class="brain-container">
+        <div class="brain-visual">
+            <div class="hemisphere left-brain">
+                <span class="hemisphere-label">🔢 שמאל</span>
+                <span class="hemisphere-traits">לוגיקה • שפה<br>מתמטיקה</span>
+            </div>
+            <div class="synapse-container" id="synapseContainer">
+                <div class="synapse"></div>
+                <div class="synapse"></div>
+                <div class="synapse"></div>
+                <div class="synapse"></div>
+                <div class="synapse"></div>
+            </div>
+            <div class="hemisphere right-brain">
+                <span class="hemisphere-label">🎨 ימין</span>
+                <span class="hemisphere-traits">יצירתיות • דמיון<br>אינטואיציה</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="sync-status">
+        <div class="sync-text">רמת סינכרון ההמיספרות</div>
+        <div class="sync-meter">
+            <div class="sync-fill" id="syncFill" style="width: 0%"></div>
+        </div>
+        <div class="sync-text"><span id="syncPercent">0</span>% מסונכרן</div>
+        <button class="reset-btn" onclick="resetProgress()">🔄 התחלה מחדש</button>
+    </div>
+
+    <div class="tabs">
+        <button class="tab-btn active" onclick="showSection('right-brain', this)">🎨 מוח ימני</button>
+        <button class="tab-btn" onclick="showSection('sync', this)">🔄 סינכרון</button>
+        <button class="tab-btn" onclick="showSection('progress', this)">📊 התקדמות</button>
+        <button class="tab-btn" onclick="showSection('tips', this)">💡 טיפים</button>
+    </div>
+
+    <main class="main-content">
+        <section id="right-brain" class="section active">
+            <div class="exercise-grid">
+                <div class="exercise-card">
+                    <div class="exercise-icon icon-creative">✏️</div>
+                    <h3>ציור ביד לא דומיננטית</h3>
+                    <p>צייר עם היד הלא דומיננטית. מפעיל את ההמיספרה הנגדית.</p>
+                    <button class="start-btn" onclick="openExercise('drawing')">התחל</button>
+                </div>
+
+                <div class="exercise-card">
+                    <div class="exercise-icon icon-visual">🔮</div>
+                    <h3>זיהוי דפוסים</h3>
+                    <p>מצא את הדפוס החסר. מפתח חשיבה ויזואלית.</p>
+                    <button class="start-btn" onclick="openExercise('pattern')">התחל</button>
+                </div>
+
+                <div class="exercise-card">
+                    <div class="exercise-icon icon-creative">💭</div>
+                    <h3>אסוציאציות חופשיות</h3>
+                    <p>כתוב אסוציאציות למילה תוך דקה. משחרר יצירתיות.</p>
+                    <button class="start-btn" onclick="openExercise('association')">התחל</button>
+                </div>
+
+                <div class="exercise-card">
+                    <div class="exercise-icon icon-visual">🎵</div>
+                    <h3>הקשבה מודעת</h3>
+                    <p>הקשב לסביבה ורשום את הצלילים ששמעת.</p>
+                    <button class="start-btn" onclick="openExercise('listening')">התחל</button>
+                </div>
+
+                <div class="exercise-card">
+                    <div class="exercise-icon icon-creative">🎭</div>
+                    <h3>דמיון מודרך</h3>
+                    <p>סגור עיניים ודמיין סצנה בפירוט.</p>
+                    <button class="start-btn" onclick="openExercise('imagination')">התחל</button>
+                </div>
+
+                <div class="exercise-card">
+                    <div class="exercise-icon icon-visual">🎨</div>
+                    <h3>זיהוי גוונים עדינים</h3>
+                    <p>מצא את הגוון השונה - 5 סיבובים.</p>
+                    <button class="start-btn" onclick="openExercise('colors')">התחל</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="sync" class="section">
+            <div class="exercise-grid">
+                <div class="exercise-card">
+                    <div class="exercise-icon icon-movement">🤸</div>
+                    <h3>תנועות קרוסלטרליות</h3>
+                    <p>יד ימין לברך שמאל ולהיפך. מצוין לסינכרון!</p>
+                    <button class="start-btn" onclick="openExercise('crosslateral')">התחל</button>
+                </div>
+
+                <div class="exercise-card">
+                    <div class="exercise-icon icon-sync">👁️</div>
+                    <h3>מעקב עיניים</h3>
+                    <p>עקוב אחרי הנקודה הנעה בעיניים בלבד.</p>
+                    <button class="start-btn" onclick="openExercise('eyetracking')">התחל</button>
+                </div>
+
+                <div class="exercise-card">
+                    <div class="exercise-icon icon-sync">🌬️</div>
+                    <h3>נשימת נחיריים לסירוגין</h3>
+                    <p>טכניקה עתיקה - 6 שניות לכל שלב.</p>
+                    <button class="start-btn" onclick="openExercise('breathing')">התחל</button>
+                </div>
+
+                <div class="exercise-card">
+                    <div class="exercise-icon icon-movement">🪞</div>
+                    <h3>תנועות מראה</h3>
+                    <p>תנועות זהות בשתי הידיים בו-זמנית.</p>
+                    <button class="start-btn" onclick="openExercise('mirror')">התחל</button>
+                </div>
+
+                <div class="exercise-card">
+                    <div class="exercise-icon icon-sync">✍️</div>
+                    <h3>כתיבה דו-ידנית</h3>
+                    <p>כתוב עם שתי הידיים בו-זמנית.</p>
+                    <button class="start-btn" onclick="openExercise('dualwriting')">התחל</button>
+                </div>
+
+                <div class="exercise-card">
+                    <div class="exercise-icon icon-movement">∞</div>
+                    <h3>ציור 8 ו-0 באוויר</h3>
+                    <p>8 ביד ימין, 0 ביד שמאל - בו-זמנית!</p>
+                    <button class="start-btn" onclick="openExercise('figure8')">התחל</button>
+                </div>
+
+                <div class="exercise-card">
+                    <div class="exercise-icon icon-movement">🧘</div>
+                    <h3>תנוחות יוגה מאזנות</h3>
+                    <p>עמידה על רגל אחת מפעילה שני צדדי המוח.</p>
+                    <button class="start-btn" onclick="openExercise('yoga')">התחל</button>
+                </div>
+
+                <div class="exercise-card">
+                    <div class="exercise-icon icon-sync">🔢</div>
+                    <h3>ספירה וא"ב בו-זמנית</h3>
+                    <p>ספור בקול רם וכתוב את הא"ב בו-זמנית.</p>
+                    <button class="start-btn" onclick="openExercise('counting')">התחל</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="progress" class="section">
+            <div class="daily-streak">
+                <div class="streak-number" id="streakCount">0</div>
+                <div>ימים רצופים 🔥</div>
+            </div>
+            <div class="progress-stats">
+                <div class="stat-card"><div class="stat-value" id="totalExercises">0</div><div class="stat-label">תרגילים</div></div>
+                <div class="stat-card"><div class="stat-value" id="totalMinutes">0</div><div class="stat-label">דקות</div></div>
+                <div class="stat-card"><div class="stat-value" id="rightBrainScore">0</div><div class="stat-label">מוח ימני</div></div>
+                <div class="stat-card"><div class="stat-value" id="syncScore">0</div><div class="stat-label">סינכרון</div></div>
+            </div>
+        </section>
+
+        <section id="tips" class="section">
+            <div class="tips-list">
+                <div class="tip-card"><div class="tip-icon">🎨</div><div class="tip-content"><h4>צייר מדי יום</h4><p>5 דקות ציור חופשי ביום.</p></div></div>
+                <div class="tip-card"><div class="tip-icon">🎵</div><div class="tip-content"><h4>מוזיקה קלאסית</h4><p>מפעילה את המוח הימני.</p></div></div>
+                <div class="tip-card"><div class="tip-icon">🤲</div><div class="tip-content"><h4>יד לא דומיננטית</h4><p>צחצח שיניים ביד השנייה.</p></div></div>
+                <div class="tip-card"><div class="tip-icon">🧘</div><div class="tip-content"><h4>מדיטציה</h4><p>מחזקת את הקשר בין ההמיספרות.</p></div></div>
+                <div class="tip-card"><div class="tip-icon">🚶</div><div class="tip-content"><h4>הליכה בטבע</h4><p>משפרת זרימת דם למוח.</p></div></div>
+            </div>
+        </section>
+    </main>
+
+    <div class="exercise-modal" id="exerciseModal">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeExercise()">✕</button>
+            <h2 class="modal-title" id="modalTitle">תרגיל</h2>
+            <div class="exercise-area" id="exerciseArea"></div>
+        </div>
+    </div>
+
+    <script>
+        // State
+        let state = { syncLevel: 0, streak: 0, totalExercises: 0, totalMinutes: 0, rightBrainScore: 0, syncScore: 0, lastActivity: null };
+        
+        // All active timers/intervals
+        let activeTimers = [];
+        
+        // Exercise-specific variables
+        let patternScore = 0, usedPatterns = [];
+        let associations = [], assocTime = 60, assocRunning = false;
+        let colorScore = 0, colorRound = 0;
+        let breathRunning = false, breathPhase = 0, breathCycles = 0;
+        let mirrorRunning = false, mirrorStep = 0;
+        let yogaIndex = 0;
+
+        // Load/Save state
+        function loadState() {
+            const saved = localStorage.getItem('brainTrainingState');
+            if (saved) {
+                state = JSON.parse(saved);
+            }
+            updateUI();
+        }
+
+        function saveState() {
+            localStorage.setItem('brainTrainingState', JSON.stringify(state));
+        }
+
+        function resetProgress() {
+            // Clear localStorage
+            try {
+                localStorage.removeItem('brainTrainingState');
+                localStorage.clear();
+            } catch(e) {}
+            
+            // Reset state object completely
+            state = { 
+                syncLevel: 0, 
+                streak: 0, 
+                totalExercises: 0, 
+                totalMinutes: 0, 
+                rightBrainScore: 0, 
+                syncScore: 0, 
+                lastActivity: null 
+            };
+            
+            // Force update UI directly
+            var syncFill = document.getElementById('syncFill');
+            var syncPercent = document.getElementById('syncPercent');
+            var streakCount = document.getElementById('streakCount');
+            var totalExercises = document.getElementById('totalExercises');
+            var totalMinutes = document.getElementById('totalMinutes');
+            var rightBrainScore = document.getElementById('rightBrainScore');
+            var syncScore = document.getElementById('syncScore');
+            
+            if (syncFill) syncFill.style.width = '0%';
+            if (syncPercent) syncPercent.innerText = '0';
+            if (streakCount) streakCount.innerText = '0';
+            if (totalExercises) totalExercises.innerText = '0';
+            if (totalMinutes) totalMinutes.innerText = '0';
+            if (rightBrainScore) rightBrainScore.innerText = '0';
+            if (syncScore) syncScore.innerText = '0';
+            
+            alert('אופס! ✨');
+        }
+
+        function updateUI() {
+            // Update sync meter
+            const syncFill = document.getElementById('syncFill');
+            const syncPercent = document.getElementById('syncPercent');
+            if (syncFill) syncFill.style.width = state.syncLevel + '%';
+            if (syncPercent) syncPercent.textContent = state.syncLevel;
+            
+            // Update progress stats
+            const streakEl = document.getElementById('streakCount');
+            const exercisesEl = document.getElementById('totalExercises');
+            const minutesEl = document.getElementById('totalMinutes');
+            const rightBrainEl = document.getElementById('rightBrainScore');
+            const syncScoreEl = document.getElementById('syncScore');
+            
+            if (streakEl) streakEl.textContent = state.streak;
+            if (exercisesEl) exercisesEl.textContent = state.totalExercises;
+            if (minutesEl) minutesEl.textContent = state.totalMinutes;
+            if (rightBrainEl) rightBrainEl.textContent = state.rightBrainScore;
+            if (syncScoreEl) syncScoreEl.textContent = state.syncScore;
+        }
+
+        function showSection(id, btn) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            btn.classList.add('active');
+        }
+
+        function clearAllTimers() {
+            activeTimers.forEach(t => {
+                clearInterval(t);
+                clearTimeout(t);
+            });
+            activeTimers = [];
+            breathRunning = false;
+            mirrorRunning = false;
+            assocRunning = false;
+        }
+
+        function openExercise(type) {
+            clearAllTimers();
+            document.getElementById('exerciseModal').classList.add('active');
+            const title = document.getElementById('modalTitle');
+            const area = document.getElementById('exerciseArea');
+
+            switch(type) {
+                case 'drawing': setupDrawing(title, area); break;
+                case 'pattern': setupPattern(title, area); break;
+                case 'association': setupAssociation(title, area); break;
+                case 'listening': setupListening(title, area); break;
+                case 'imagination': setupImagination(title, area); break;
+                case 'colors': setupColors(title, area); break;
+                case 'crosslateral': setupCrosslateral(title, area); break;
+                case 'eyetracking': setupEyeTracking(title, area); break;
+                case 'breathing': setupBreathing(title, area); break;
+                case 'mirror': setupMirror(title, area); break;
+                case 'dualwriting': setupDualWriting(title, area); break;
+                case 'figure8': setupFigure8(title, area); break;
+                case 'yoga': setupYoga(title, area); break;
+                case 'counting': setupCounting(title, area); break;
+            }
+        }
+
+        function closeExercise() {
+            clearAllTimers();
+            document.getElementById('exerciseModal').classList.remove('active');
+        }
+
+        function completeExercise(type, points) {
+            state.totalExercises++;
+            state.totalMinutes += Math.round(points / 2);
+            if (type === 'rightBrain') {
+                state.rightBrainScore += points;
+                state.syncLevel = Math.min(100, state.syncLevel + Math.round(points / 2));
+            } else {
+                state.syncScore += points;
+                state.syncLevel = Math.min(100, state.syncLevel + points);
+            }
+            const today = new Date().toDateString();
+            if (state.lastActivity !== today) {
+                const yesterday = new Date();
+                yesterday.setDate(yesterday.getDate() - 1);
+                state.streak = state.lastActivity === yesterday.toDateString() ? state.streak + 1 : 1;
+                state.lastActivity = today;
+            }
+            saveState();
+            updateUI();
+        }
+
+        // ===== DRAWING =====
+        function setupDrawing(title, area) {
+            title.textContent = '✏️ ציור ביד לא דומיננטית';
+            area.innerHTML = `
+                <p style="text-align:center;margin-bottom:15px;color:var(--text-light)">צייר עם היד הלא דומיננטית!</p>
+                <div class="canvas-container"><canvas id="drawingCanvas" width="280" height="200"></canvas></div>
+                <div class="canvas-tools">
+                    <button class="tool-btn" onclick="setCanvasColor('#E8A0B0')">🌸</button>
+                    <button class="tool-btn" onclick="setCanvasColor('#D4A574')">✨</button>
+                    <button class="tool-btn" onclick="setCanvasColor('#DCD0FF')">💜</button>
+                    <button class="tool-btn" onclick="setCanvasColor('#4A3F55')">⚫</button>
+                    <button class="tool-btn" onclick="clearCanvas()">🗑️</button>
+                </div>
+                <button class="start-btn" style="margin-top:15px" onclick="completeExercise('rightBrain',3);closeExercise()">סיימתי ✓</button>
+            `;
+            initCanvas();
+        }
+
+        let drawing = false, canvasColor = '#E8A0B0';
+        function initCanvas() {
+            const c = document.getElementById('drawingCanvas');
+            if (!c) return;
+            const ctx = c.getContext('2d');
+            ctx.strokeStyle = canvasColor;
+            ctx.lineWidth = 3;
+            ctx.lineCap = 'round';
+            ctx.fillStyle = '#FFF';
+            ctx.fillRect(0, 0, c.width, c.height);
+            
+            c.onmousedown = e => { drawing = true; ctx.beginPath(); ctx.moveTo(e.offsetX, e.offsetY); };
+            c.onmousemove = e => { if (drawing) { ctx.lineTo(e.offsetX, e.offsetY); ctx.stroke(); } };
+            c.onmouseup = c.onmouseleave = () => drawing = false;
+            c.ontouchstart = e => { e.preventDefault(); drawing = true; const r = c.getBoundingClientRect(); ctx.beginPath(); ctx.moveTo(e.touches[0].clientX - r.left, e.touches[0].clientY - r.top); };
+            c.ontouchmove = e => { e.preventDefault(); if (!drawing) return; const r = c.getBoundingClientRect(); ctx.lineTo(e.touches[0].clientX - r.left, e.touches[0].clientY - r.top); ctx.stroke(); };
+            c.ontouchend = () => drawing = false;
+        }
+        function setCanvasColor(c) { canvasColor = c; const cv = document.getElementById('drawingCanvas'); if (cv) cv.getContext('2d').strokeStyle = c; }
+        function clearCanvas() { const c = document.getElementById('drawingCanvas'); if (c) { const ctx = c.getContext('2d'); ctx.fillStyle = '#FFF'; ctx.fillRect(0, 0, c.width, c.height); } }
+
+        // ===== PATTERN =====
+        const patterns = [
+            { seq: ['🔴','🔵','🔴','🔵','🔴','?'], ans: '🔵', opts: ['🔴','🔵','🟢'] },
+            { seq: ['⭐','⭐','🌙','⭐','⭐','?'], ans: '🌙', opts: ['⭐','🌙','☀️'] },
+            { seq: ['🌸','🌺','🌸','🌺','🌸','?'], ans: '🌺', opts: ['🌺','🌸','🌷'] },
+            { seq: ['🔺','🔻','🔺','🔻','🔺','?'], ans: '🔻', opts: ['🔺','🔻','⬛'] },
+            { seq: ['💙','💚','💙','💚','💙','?'], ans: '💚', opts: ['💙','💚','💜'] },
+            { seq: ['🐱','🐶','🐱','🐶','🐱','?'], ans: '🐶', opts: ['🐱','🐶','🐰'] },
+            { seq: ['🎵','🎶','🎵','🎶','🎵','?'], ans: '🎶', opts: ['🎵','🎶','🎼'] }
+        ];
+
+        function setupPattern(title, area) {
+            title.textContent = '🔮 זיהוי דפוסים';
+            patternScore = 0;
+            usedPatterns = [];
+            showPattern(area);
+        }
+
+        function showPattern(area) {
+            const available = patterns.filter((_, i) => !usedPatterns.includes(i));
+            if (!available.length) usedPatterns = [];
+            const p = available.length ? available[Math.floor(Math.random() * available.length)] : patterns[0];
+            usedPatterns.push(patterns.indexOf(p));
+            
+            area.innerHTML = `
+                <div class="score-display">ניקוד: ${patternScore} / 5</div>
+                <p style="text-align:center;margin-bottom:15px;color:var(--text-light)">מהו הסמל החסר?</p>
+                <div style="display:flex;gap:8px;justify-content:center;margin-bottom:20px;flex-wrap:wrap">
+                    ${p.seq.map(s => `<span style="font-size:1.8rem;padding:8px;background:var(--cream);border-radius:10px">${s}</span>`).join('')}
+                </div>
+                <div style="display:flex;gap:15px;justify-content:center">
+                    ${p.opts.map(o => `<button class="tool-btn" style="font-size:1.5rem;padding:15px 25px" onclick="checkPattern('${o}','${p.ans}')">${o}</button>`).join('')}
+                </div>
+            `;
+        }
+
+        function checkPattern(selected, answer) {
+            if (selected === answer) {
+                patternScore++;
+                if (patternScore >= 5) {
+                    completeExercise('rightBrain', 5);
+                    alert('מצוין! 🎉');
+                    closeExercise();
+                } else {
+                    showPattern(document.getElementById('exerciseArea'));
+                }
+            } else {
+                alert('נסה שוב! 💪');
+            }
+        }
+
+        // ===== ASSOCIATION =====
+        function setupAssociation(title, area) {
+            title.textContent = '💭 אסוציאציות חופשיות';
+            const words = ['שמש','מים','אהבה','עץ','חלום','דרך','כוכב','ים','שמחה','בית'];
+            const word = words[Math.floor(Math.random() * words.length)];
+            associations = [];
+            assocTime = 60;
+            assocRunning = false;
+            
+            area.innerHTML = `
+                <p style="color:var(--text-light);text-align:center">כתוב אסוציאציות למילה:</p>
+                <div class="current-word">${word}</div>
+                <div class="timer-display" id="assocTimer">01:00</div>
+                <div class="timer-controls" style="margin-bottom:15px">
+                    <button class="timer-btn primary" id="assocStartBtn" onclick="startAssociation()">התחל</button>
+                    <button class="timer-btn secondary" onclick="finishAssociation()">סיום</button>
+                </div>
+                <input type="text" class="association-input" id="assocInput" placeholder="הקלד מילה ולחץ Enter" onkeypress="addAssociation(event)" disabled>
+                <div class="associations-list" id="assocList"></div>
+            `;
+        }
+
+        function startAssociation() {
+            if (assocRunning) return;
+            assocRunning = true;
+            const input = document.getElementById('assocInput');
+            const btn = document.getElementById('assocStartBtn');
+            if (input) { input.disabled = false; input.focus(); }
+            if (btn) { btn.textContent = 'רץ...'; btn.disabled = true; }
+            
+            const timer = setInterval(() => {
+                if (!assocRunning) { clearInterval(timer); return; }
+                assocTime--;
+                const el = document.getElementById('assocTimer');
+                if (el) el.textContent = `${String(Math.floor(assocTime/60)).padStart(2,'0')}:${String(assocTime%60).padStart(2,'0')}`;
+                if (assocTime <= 0) finishAssociation();
+            }, 1000);
+            activeTimers.push(timer);
+        }
+
+        function addAssociation(e) {
+            if (e.key === 'Enter') {
+                const input = document.getElementById('assocInput');
+                const val = input.value.trim();
+                if (val && !associations.includes(val)) {
+                    associations.push(val);
+                    const list = document.getElementById('assocList');
+                    if (list) list.innerHTML += `<span class="association-tag">${val}</span>`;
+                }
+                input.value = '';
+            }
+        }
+
+        function finishAssociation() {
+            assocRunning = false;
+            completeExercise('rightBrain', Math.max(Math.min(associations.length, 10), 1));
+            alert(`מצאת ${associations.length} אסוציאציות! 🎉`);
+            closeExercise();
+        }
+
+        // ===== LISTENING =====
+        function setupListening(title, area) {
+            title.textContent = '🎵 הקשבה מודעת';
+            area.innerHTML = `
+                <p style="text-align:center;margin-bottom:20px;color:var(--text-light)">עצום עיניים והקשב לסביבה 2 דקות.</p>
+                <div class="timer-display" id="listenTimer">02:00</div>
+                <div class="timer-controls">
+                    <button class="timer-btn primary" id="listenStartBtn" onclick="startListening()">התחל</button>
+                    <button class="timer-btn secondary" onclick="stopListening()">עצור</button>
+                </div>
+                <textarea class="listening-notes" id="listenNotes" placeholder="כתוב את הצלילים ששמעת..."></textarea>
+                <button class="start-btn" style="margin-top:15px" onclick="finishListening()">שמור וסיימי ✓</button>
+            `;
+        }
+
+        let listenTime = 120;
+        function startListening() {
+            listenTime = 120;
+            const btn = document.getElementById('listenStartBtn');
+            if (btn) { btn.disabled = true; btn.textContent = 'רץ...'; }
+            const timer = setInterval(() => {
+                listenTime--;
+                const el = document.getElementById('listenTimer');
+                if (el) el.textContent = `${String(Math.floor(listenTime/60)).padStart(2,'0')}:${String(listenTime%60).padStart(2,'0')}`;
+                if (listenTime <= 0) { clearInterval(timer); }
+            }, 1000);
+            activeTimers.push(timer);
+        }
+
+        function stopListening() {
+            clearAllTimers();
+            const btn = document.getElementById('listenStartBtn');
+            if (btn) { btn.disabled = false; btn.textContent = 'התחל'; }
+        }
+
+        function finishListening() {
+            const notes = document.getElementById('listenNotes');
+            const count = notes && notes.value.trim() ? notes.value.split('\n').filter(l => l.trim()).length : 0;
+            completeExercise('rightBrain', Math.min(count + 2, 8));
+            if (count > 0) alert(`רשמת ${count} צלילים! 🎵`);
+            closeExercise();
+        }
+
+        // ===== IMAGINATION =====
+        const scenes = ['דמיין חוף ים שקט בשקיעה...','דמיין יער ירוק עם נחל...','דמיין גן פרחים באביב...','דמיין שמיים מלאי כוכבים...','דמיין הר מושלג...'];
+        let sceneIndex = 0;
+
+        function setupImagination(title, area) {
+            title.textContent = '🎭 דמיון מודרך';
+            area.innerHTML = `
+                <p style="text-align:center;margin-bottom:20px;color:var(--text-light)">סגור עיניים ודמיין את הסצנה.</p>
+                <div class="current-word" id="sceneText">${scenes[0]}</div>
+                <div class="timer-display" id="imgTimer">60</div>
+                <div class="timer-controls">
+                    <button class="timer-btn primary" onclick="startImagination()">התחל</button>
+                    <button class="timer-btn secondary" onclick="nextScene()">סצנה הבאה</button>
+                </div>
+                <textarea class="listening-notes" placeholder="תאר מה ראית בדמיון..."></textarea>
+                <button class="start-btn" style="margin-top:15px" onclick="completeExercise('rightBrain',4);closeExercise()">סיימתי ✓</button>
+            `;
+        }
+
+        function startImagination() {
+            let time = 60;
+            const timer = setInterval(() => {
+                time--;
+                const el = document.getElementById('imgTimer');
+                if (el) el.textContent = time;
+                if (time <= 0) clearInterval(timer);
+            }, 1000);
+            activeTimers.push(timer);
+        }
+
+        function nextScene() {
+            sceneIndex = (sceneIndex + 1) % scenes.length;
+            const el = document.getElementById('sceneText');
+            if (el) el.textContent = scenes[sceneIndex];
+        }
+
+        // ===== COLORS =====
+        function setupColors(title, area) {
+            title.textContent = '🎨 זיהוי גוונים';
+            colorScore = 0;
+            colorRound = 0;
+            showColorRound(area);
+        }
+
+        function showColorRound(area) {
+            const colors = [
+                { base: '#FFB6C8', diff: '#FFC8D8' },
+                { base: '#C8E0FF', diff: '#D8ECFF' },
+                { base: '#DCD0FF', diff: '#E8DCFF' },
+                { base: '#D4A574', diff: '#E0B484' },
+                { base: '#C8E8C8', diff: '#D8F0D8' }
+            ];
+            const c = colors[Math.floor(Math.random() * colors.length)];
+            const diffIdx = Math.floor(Math.random() * 4);
+            
+            area.innerHTML = `
+                <div class="score-display">סיבוב ${colorRound + 1}/5 | נכון: ${colorScore}</div>
+                <p style="text-align:center;margin-bottom:20px;color:var(--text-light)">מצא את הריבוע השונה:</p>
+                <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:15px;max-width:230px;margin:0 auto">
+                    ${[0,1,2,3].map(i => `<div onclick="checkColor(${i},${diffIdx})" style="width:100px;height:100px;background:${i===diffIdx?c.diff:c.base};border-radius:15px;cursor:pointer"></div>`).join('')}
+                </div>
+            `;
+        }
+
+        function checkColor(selected, correct) {
+            colorRound++;
+            if (selected === correct) colorScore++;
+            if (colorRound >= 5) {
+                completeExercise('rightBrain', colorScore + 1);
+                alert(`${colorScore}/5 נכון! 👁️`);
+                closeExercise();
+            } else {
+                showColorRound(document.getElementById('exerciseArea'));
+            }
+        }
+
+        // ===== CROSSLATERAL =====
+        const crossMoves = [
+            { text: 'יד ימין לברך שמאל', left: '🦵', right: '🖐️' },
+            { text: 'יד שמאל לברך ימין', left: '🖐️', right: '🦵' },
+            { text: 'מרפק ימני לברך שמאלית', left: '🦵', right: '💪' },
+            { text: 'מרפק שמאלי לברך ימנית', left: '💪', right: '🦵' }
+        ];
+
+        function setupCrosslateral(title, area) {
+            title.textContent = '🤸 תנועות קרוסלטרליות';
+            area.innerHTML = `
+                <p style="text-align:center;margin-bottom:15px;color:var(--text-light)">בצע לפי ההוראות:</p>
+                <div class="movement-visual">
+                    <div class="body-part left-part" id="crossLeft">🖐️</div>
+                    <div class="body-part right-part" id="crossRight">🦵</div>
+                </div>
+                <div class="movement-instruction" id="crossInst">לחץ התחל</div>
+                <div class="timer-display" id="crossTimer">30</div>
+                <div class="timer-controls">
+                    <button class="timer-btn primary" onclick="startCrosslateral()">התחל</button>
+                    <button class="timer-btn secondary" onclick="clearAllTimers()">עצור</button>
+                </div>
+            `;
+        }
+
+        function startCrosslateral() {
+            let time = 30, step = 0;
+            updateCrossMove(step);
+            const timer = setInterval(() => {
+                time--;
+                const el = document.getElementById('crossTimer');
+                if (el) el.textContent = time;
+                if (time % 5 === 0 && time > 0) {
+                    step = (step + 1) % crossMoves.length;
+                    updateCrossMove(step);
+                }
+                if (time <= 0) {
+                    clearInterval(timer);
+                    completeExercise('sync', 5);
+                    alert('כל הכבוד! 🎉');
+                    closeExercise();
+                }
+            }, 1000);
+            activeTimers.push(timer);
+        }
+
+        function updateCrossMove(step) {
+            const m = crossMoves[step];
+            const l = document.getElementById('crossLeft');
+            const r = document.getElementById('crossRight');
+            const i = document.getElementById('crossInst');
+            if (l) l.textContent = m.left;
+            if (r) r.textContent = m.right;
+            if (i) i.textContent = m.text;
+        }
+
+        // ===== EYE TRACKING =====
+        function setupEyeTracking(title, area) {
+            title.textContent = '👁️ מעקב עיניים';
+            area.innerHTML = `
+                <p style="text-align:center;margin-bottom:15px;color:var(--text-light)">עקוב אחרי הכדור בעיניים בלבד.</p>
+                <div class="eye-tracking-area" id="trackingArea">
+                    <div class="tracking-ball" id="trackingBall" style="top:50%;left:50%"></div>
+                </div>
+                <div class="timer-display" id="eyeTimer">30</div>
+                <div class="timer-controls">
+                    <button class="timer-btn primary" onclick="startEyeTracking()">התחל</button>
+                    <button class="timer-btn secondary" onclick="clearAllTimers()">עצור</button>
+                </div>
+            `;
+        }
+
+        function startEyeTracking() {
+            let time = 30;
+            moveBall();
+            const moveTimer = setInterval(moveBall, 1500);
+            const countTimer = setInterval(() => {
+                time--;
+                const el = document.getElementById('eyeTimer');
+                if (el) el.textContent = time;
+                if (time <= 0) {
+                    clearInterval(moveTimer);
+                    clearInterval(countTimer);
+                    completeExercise('sync', 4);
+                    alert('מצוין! 🎉');
+                    closeExercise();
+                }
+            }, 1000);
+            activeTimers.push(moveTimer, countTimer);
+        }
+
+        function moveBall() {
+            const ball = document.getElementById('trackingBall');
+            if (!ball) return;
+            const positions = ['10%,10%','10%,80%','80%,10%','80%,80%','50%,50%','10%,50%','50%,10%','50%,80%','80%,50%'];
+            const pos = positions[Math.floor(Math.random() * positions.length)].split(',');
+            ball.style.top = pos[0];
+            ball.style.left = pos[1];
+        }
+
+        // ===== BREATHING - FIXED WITH HOLD =====
+        function setupBreathing(title, area) {
+            title.textContent = '🌬️ נשימת נחיריים לסירוגין';
+            breathRunning = false;
+            breathPhase = 0;
+            breathCycles = 0;
+            
+            area.innerHTML = `
+                <p style="text-align:center;margin-bottom:15px;color:var(--text-light)">סגור את הנחיר המואר.<br>6 שניות לכל שלב.</p>
+                <div class="breathing-circle" id="breathCircle">
+                    <span class="breathing-text" id="breathText">לחץ התחל</span>
+                </div>
+                <div class="nostril-indicator">
+                    <div class="nostril" id="leftNostril">🫁<span class="nostril-label">שמאל</span></div>
+                    <div class="nostril" id="rightNostril">🫁<span class="nostril-label">ימין</span></div>
+                </div>
+                <div class="timer-controls" style="margin-top:20px">
+                    <button class="timer-btn primary" id="breathStartBtn" onclick="startBreathing()">התחל</button>
+                    <button class="timer-btn secondary" onclick="stopBreathing()">עצור</button>
+                </div>
+                <button class="start-btn" style="margin-top:15px" onclick="completeExercise('sync',6);closeExercise()">סיימתי ✓</button>
+            `;
+        }
+
+        function startBreathing() {
+            if (breathRunning) return;
+            breathRunning = true;
+            breathPhase = 0;
+            breathCycles = 0;
+            
+            const btn = document.getElementById('breathStartBtn');
+            if (btn) { btn.textContent = 'רץ...'; btn.disabled = true; }
+            
+            runBreathPhase();
+        }
+
+        function runBreathPhase() {
+            if (!breathRunning) return;
+            
+            const circle = document.getElementById('breathCircle');
+            const text = document.getElementById('breathText');
+            const leftN = document.getElementById('leftNostril');
+            const rightN = document.getElementById('rightNostril');
+            
+            if (!circle || !text) {
+                breathRunning = false;
+                return;
+            }
+            
+            // Remove all animation classes first
+            circle.classList.remove('inhale', 'exhale', 'hold');
+            if (leftN) leftN.classList.remove('active');
+            if (rightN) rightN.classList.remove('active');
+            
+            switch(breathPhase) {
+                case 0: // Inhale left
+                    circle.classList.add('inhale');
+                    text.textContent = 'שאף שמאל';
+                    if (leftN) leftN.classList.add('active');
+                    break;
+                case 1: // Hold - NO ANIMATION
+                    circle.classList.add('hold');
+                    text.textContent = 'עצור נשימה';
+                    // Keep circle still - no active nostril
+                    break;
+                case 2: // Exhale right
+                    circle.classList.add('exhale');
+                    text.textContent = 'נשוף ימין';
+                    if (rightN) rightN.classList.add('active');
+                    break;
+                case 3: // Hold and count cycle - NO ANIMATION
+                    circle.classList.add('hold');
+                    text.textContent = 'עצור נשימה';
+                    breathCycles++;
+                    if (breathCycles >= 4) {
+                        stopBreathing();
+                        completeExercise('sync', 6);
+                        alert('נפלא! 4 סבבים! 🌬️');
+                        closeExercise();
+                        return;
+                    }
+                    break;
+            }
+            
+            breathPhase = (breathPhase + 1) % 4;
+            
+            const timer = setTimeout(runBreathPhase, 6000);
+            activeTimers.push(timer);
+        }
+
+        function stopBreathing() {
+            breathRunning = false;
+            clearAllTimers();
+            
+            const circle = document.getElementById('breathCircle');
+            const text = document.getElementById('breathText');
+            const btn = document.getElementById('breathStartBtn');
+            const leftN = document.getElementById('leftNostril');
+            const rightN = document.getElementById('rightNostril');
+            
+            if (circle) {
+                circle.classList.remove('inhale', 'exhale', 'hold');
+                circle.style.transform = 'scale(1)';
+                circle.style.background = 'var(--blue-soft)';
+            }
+            if (text) text.textContent = 'עצרת';
+            if (btn) { btn.textContent = 'התחל'; btn.disabled = false; }
+            if (leftN) leftN.classList.remove('active');
+            if (rightN) rightN.classList.remove('active');
+        }
+
+        // ===== MIRROR =====
+        const mirrorMoves = [
+            { text: 'הרם ידיים למעלה', emoji: '🙌' },
+            { text: 'הורד ידיים למטה', emoji: '👐' },
+            { text: 'פתח לצדדים', emoji: '🤲' },
+            { text: 'סגור אגרופים', emoji: '✊' },
+            { text: 'פתח כפות', emoji: '🖐️' },
+            { text: 'הנף ידיים', emoji: '👋' }
+        ];
+
+        function setupMirror(title, area) {
+            title.textContent = '🪞 תנועות מראה';
+            mirrorRunning = false;
+            mirrorStep = 0;
+            
+            area.innerHTML = `
+                <p style="text-align:center;margin-bottom:20px;color:var(--text-light)">בצע תנועות עם שתי הידיים בו-זמנית.</p>
+                <div class="movement-visual">
+                    <div class="body-part left-part" id="mirrorLeft">🖐️</div>
+                    <div class="body-part right-part" id="mirrorRight">🖐️</div>
+                </div>
+                <div class="movement-instruction" id="mirrorInst">לחץ התחל</div>
+                <div class="timer-display" id="mirrorTimer">30</div>
+                <div class="timer-controls">
+                    <button class="timer-btn primary" id="mirrorStartBtn" onclick="startMirror()">התחל</button>
+                    <button class="timer-btn secondary" onclick="stopMirror()">עצור</button>
+                </div>
+                <button class="start-btn" style="margin-top:15px" onclick="completeExercise('sync',5);closeExercise()">סיימתי ✓</button>
+            `;
+        }
+
+        function startMirror() {
+            if (mirrorRunning) return;
+            mirrorRunning = true;
+            mirrorStep = 0;
+            let time = 30;
+            
+            const btn = document.getElementById('mirrorStartBtn');
+            if (btn) { btn.textContent = 'רץ...'; btn.disabled = true; }
+            
+            updateMirrorMove();
+            
+            const timer = setInterval(() => {
+                if (!mirrorRunning) {
+                    clearInterval(timer);
+                    return;
+                }
+                
+                time--;
+                const timerEl = document.getElementById('mirrorTimer');
+                if (timerEl) timerEl.textContent = time;
+                
+                if (time % 5 === 0 && time > 0) {
+                    mirrorStep = (mirrorStep + 1) % mirrorMoves.length;
+                    updateMirrorMove();
+                }
+                
+                if (time <= 0) {
+                    clearInterval(timer);
+                    mirrorRunning = false;
+                    completeExercise('sync', 5);
+                    alert('מעולה! 🪞');
+                    closeExercise();
+                }
+            }, 1000);
+            activeTimers.push(timer);
+        }
+
+        function updateMirrorMove() {
+            if (!mirrorRunning) return;
+            const m = mirrorMoves[mirrorStep];
+            const inst = document.getElementById('mirrorInst');
+            const left = document.getElementById('mirrorLeft');
+            const right = document.getElementById('mirrorRight');
+            if (inst) inst.textContent = m.text;
+            if (left) left.textContent = m.emoji;
+            if (right) right.textContent = m.emoji;
+        }
+
+        function stopMirror() {
+            mirrorRunning = false;
+            clearAllTimers();
+            const btn = document.getElementById('mirrorStartBtn');
+            if (btn) { btn.textContent = 'התחל'; btn.disabled = false; }
+        }
+
+        // ===== DUAL WRITING =====
+        const dualWords = ['שלום','אהבה','שמש','ים','בית','עץ','פרח','כוכב','לב','ירח','דג','עין','יד','רגל','שיר','חלום','מים','אש','רוח','שמים','חג','ילד','ספר','שולחן','כיסא','דלת','חלון','גשם','שלג','אור'];
+        let wordIndex = 0;
+
+        function setupDualWriting(title, area) {
+            title.textContent = '✍️ כתיבה דו-ידנית';
+            area.innerHTML = `
+                <p style="text-align:center;margin-bottom:20px;color:var(--text-light)">קח עט בכל יד וכתוב בו-זמנית.</p>
+                <div class="current-word" id="dualWord">${dualWords[0]}</div>
+                <div class="timer-controls">
+                    <button class="timer-btn primary" onclick="nextDualWord()">מילה הבאה</button>
+                </div>
+                <p style="text-align:center;margin-top:20px;color:var(--text-light);font-size:0.85rem">טיפ: התחילי עם עיגולים</p>
+                <button class="start-btn" style="margin-top:15px" onclick="completeExercise('sync',5);closeExercise()">סיימתי ✓</button>
+            `;
+        }
+
+        function nextDualWord() {
+            wordIndex = (wordIndex + 1) % dualWords.length;
+            const el = document.getElementById('dualWord');
+            if (el) el.textContent = dualWords[wordIndex];
+        }
+
+        // ===== FIGURE 8 =====
+        function setupFigure8(title, area) {
+            title.textContent = '∞ ציור 8 ו-0 באוויר';
+            area.innerHTML = `
+                <p style="text-align:center;margin-bottom:20px;color:var(--text-light)">8 ביד ימין, 0 ביד שמאל - בו-זמנית!</p>
+                <div class="figure-display">
+                    <div class="figure-box">
+                        <div class="dot-animate dot-8"></div>
+                        <span class="figure-label">יד ימין - 8</span>
+                    </div>
+                    <div class="figure-box">
+                        <div class="dot-animate dot-0"></div>
+                        <span class="figure-label">יד שמאל - 0</span>
+                    </div>
+                </div>
+                <div class="timer-display" id="f8Timer">45</div>
+                <div class="timer-controls">
+                    <button class="timer-btn primary" id="f8StartBtn" onclick="startFigure8()">התחל</button>
+                    <button class="timer-btn secondary" onclick="clearAllTimers()">עצור</button>
+                </div>
+                <button class="start-btn" style="margin-top:15px" onclick="completeExercise('sync',7);closeExercise()">סיימתי ✓</button>
+            `;
+        }
+
+        function startFigure8() {
+            let time = 45;
+            const btn = document.getElementById('f8StartBtn');
+            if (btn) { btn.textContent = 'רץ...'; btn.disabled = true; }
+            
+            const timer = setInterval(() => {
+                time--;
+                const el = document.getElementById('f8Timer');
+                if (el) el.textContent = time;
+                if (time <= 0) {
+                    clearInterval(timer);
+                    completeExercise('sync', 7);
+                    alert('מדהים! 🌟');
+                    closeExercise();
+                }
+            }, 1000);
+            activeTimers.push(timer);
+        }
+
+        // ===== YOGA =====
+        const yogaPoses = [
+            { name: 'עץ (Vrksasana)', desc: 'עמוד על רגל אחת, ידיים מעל הראש.', emoji: '🌳', time: 20 },
+            { name: 'נשר (Garudasana)', desc: 'רגליים וידיים כרוכות.', emoji: '🦅', time: 15 },
+            { name: 'פרח הלוטוס', desc: 'עמידה על רגל אחת, גוף קדימה.', emoji: '🌸', time: 15 }
+        ];
+
+        function setupYoga(title, area) {
+            title.textContent = '🧘 תנוחות יוגה מאזנות';
+            yogaIndex = 0;
+            showYogaPose(area);
+        }
+
+        function showYogaPose(area) {
+            const pose = yogaPoses[yogaIndex];
+            area.innerHTML = `
+                <div style="text-align:center">
+                    <div style="font-size:4rem;margin-bottom:15px">${pose.emoji}</div>
+                    <h3 style="margin-bottom:10px">${pose.name}</h3>
+                    <p style="color:var(--text-light);margin-bottom:20px">${pose.desc}</p>
+                    <div class="timer-display" id="yogaTimer">${pose.time}</div>
+                    <div class="timer-controls">
+                        <button class="timer-btn primary" onclick="startYogaPose(${pose.time})">התחל</button>
+                        <button class="timer-btn secondary" onclick="skipYogaPose()">דלג</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function startYogaPose(seconds) {
+            let time = seconds;
+            const timer = setInterval(() => {
+                time--;
+                const el = document.getElementById('yogaTimer');
+                if (el) el.textContent = time;
+                if (time <= 0) {
+                    clearInterval(timer);
+                    yogaIndex++;
+                    if (yogaIndex >= yogaPoses.length) {
+                        completeExercise('sync', 6);
+                        alert('מדהים! 🧘');
+                        closeExercise();
+                    } else {
+                        showYogaPose(document.getElementById('exerciseArea'));
+                    }
+                }
+            }, 1000);
+            activeTimers.push(timer);
+        }
+
+        function skipYogaPose() {
+            clearAllTimers();
+            yogaIndex++;
+            if (yogaIndex >= yogaPoses.length) {
+                completeExercise('sync', 4);
+                closeExercise();
+            } else {
+                showYogaPose(document.getElementById('exerciseArea'));
+            }
+        }
+
+        // ===== COUNTING =====
+        function setupCounting(title, area) {
+            title.textContent = '🔢 ספירה וא"ב בו-זמנית';
+            area.innerHTML = `
+                <p style="text-align:center;margin-bottom:20px;color:var(--text-light)">ספור בקול 1-20 בזמן שאת כותבת א-ת!</p>
+                <div class="current-word" style="font-size:1.5rem">פה: 1, 2, 3...<br>יד: א, ב, ג...</div>
+                <div class="timer-display" id="cntTimer">60</div>
+                <div class="timer-controls">
+                    <button class="timer-btn primary" id="cntStartBtn" onclick="startCounting()">התחל</button>
+                    <button class="timer-btn secondary" onclick="clearAllTimers()">עצור</button>
+                </div>
+                <button class="start-btn" style="margin-top:15px" onclick="completeExercise('sync',6);closeExercise()">סיימתי ✓</button>
+            `;
+        }
+
+        function startCounting() {
+            let time = 60;
+            const btn = document.getElementById('cntStartBtn');
+            if (btn) { btn.textContent = 'רץ...'; btn.disabled = true; }
+            
+            const timer = setInterval(() => {
+                time--;
+                const el = document.getElementById('cntTimer');
+                if (el) el.textContent = time;
+                if (time <= 0) {
+                    clearInterval(timer);
+                    completeExercise('sync', 6);
+                    alert('מעולה! 🧠');
+                    closeExercise();
+                }
+            }, 1000);
+            activeTimers.push(timer);
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', loadState);
+    </script>
+</body>
+</html>
